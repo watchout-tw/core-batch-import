@@ -2,22 +2,31 @@
   <div class="hello">
     <h1>Core Batch Import</h1>
     <div class="row">
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-4">
+      <div class="col-md-1"></div>
+      <div class="col-md-2">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Enter Sheet ID" @v-model="sheetID">
+          <input type="text" class="form-control" placeholder="Enter Sheet ID" v-model="sheetID">
         </div>
-        <button class="btn btn-default" v-if="showAuth" @click="handleAuthClick()">Authorize</button>
-        <button class="btn btn-default" v-if="showSignout" @click="handleSignoutClick()">Sign Out</button>
-        <button class="btn btn-default" @click="appStart()">appStart</button>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Enter Sheet Name" v-model="sheetName">
+        </div>
+        <button class="btn btn-default" v-if="showAuth" @click="handleAuthClick()">Sign In</button>
+        <button class="btn btn-default" v-if="!showAuth && !loggedIn" @click="googleInit()">Ready for Import</button>
+        <button class="btn btn-default" v-if="loggedIn" @click="handleSignoutClick()">Sign Out</button>
+        <button class="btn btn-info" v-if="loggedIn" @click="readSpreadSheet()">Read Data</button>
       </div>
+      <div class="col-md-8">
+        <pre>{{importData}}</pre>
+        {{errmsg}}
+      </div>
+      <div class="col-md-1"></div>
     </div>
   </div>
 </template>
 
 <script>
 import * as googleConfig from '../../config/google'
+import * as csv from '../util/csv'
 /* global gapi:true */
 export default {
   name: 'hello',
@@ -25,12 +34,15 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       showAuth: false,
-      showSignout: false,
-      sheetID: ''
+      loggedIn: false,
+      sheetID: '',
+      sheetName: '',
+      errmsg: '',
+      importData: []
     }
   },
   methods: {
-    appStart () {
+    googleInit () {
       gapi.load('client:auth2', this.initClient)
     },
     initClient () {
@@ -47,17 +59,16 @@ export default {
         // Handle the initial sign-in state.
         this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
       }, function (error) {
-        console.log(error)
+        console.error(error)
       })
     },
     updateSigninStatus (isSignedIn) {
       if (isSignedIn) {
+        this.loggedIn = true
         this.showAuth = false
-        this.showSignout = true
-        this.listMajors()
       } else {
         this.showAuth = true
-        this.showSignout = false
+        this.loggedIn = false
       }
     },
     handleAuthClick (event) {
@@ -66,24 +77,29 @@ export default {
     handleSignoutClick (event) {
       gapi.auth2.getAuthInstance().signOut()
     },
-    listMajors () {
+    readSpreadSheet () {
+      if (!this.sheetID || !this.sheetName) {
+        alert('Please Enter Sheet ID and Sheet Name')
+        return
+      }
       gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: this.sheetID,
-        range: '罷免!A:E'
+        range: this.sheetName + '!A:Z'
       }).then(response => {
-        var range = response.result
-        if (range.values.length > 0) {
-          console.log('Name, Major:')
-          for (var i = 0; i < range.values.length; i++) {
-            var row = range.values[i]
-            // Print columns A and E, which correspond to indices 0 and 4.
-            console.log(row[0] + ', ' + row[1])
-          }
-        } else {
-          console.log('No data found.')
-        }
+        this.importData = response.result
+        csv.convert2CSV(this.importData)
+        // if (range.values.length > 0) {
+        //   // console.log('Name, Major:')
+        //   for (var i = 0; i < range.values.length; i++) {
+        //     var row = range.values[i]
+        //     // Print columns A and E, which correspond to indices 0 and 4.
+        //     console.log(row[0] + ', ' + row[1])
+        //   }
+        // } else {
+        //   console.log('No data found.')
+        // }
       }, response => {
-        console.log('Error: ' + response.result.error.message)
+        this.errmsg = 'Error: ' + response.result.error.message
       })
     }
   }
