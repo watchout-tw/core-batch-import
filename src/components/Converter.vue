@@ -10,10 +10,15 @@
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Enter Sheet Name" v-model="sheetName">
         </div>
-        <button class="btn btn-default" v-if="showAuth" @click="handleAuthClick()">Sign In</button>
-        <button class="btn btn-default" v-if="!showAuth && !loggedIn" @click="googleInit()">Ready for Import</button>
-        <button class="btn btn-default" v-if="loggedIn" @click="handleSignoutClick()">Sign Out</button>
-        <button class="btn btn-info" v-if="loggedIn" @click="readSpreadSheet()">Read Data</button>
+        <div class="form-group">
+          <button class="btn btn-default" v-if="showAuth" @click="handleAuthClick()">Sign In</button>
+          <button class="btn btn-default" v-if="!showAuth && !loggedIn" @click="googleInit()">Ready for Import</button>
+          <button class="btn btn-default" v-if="loggedIn" @click="handleSignoutClick()">Sign Out</button>
+          <button class="btn btn-info" v-if="loggedIn" @click="readSpreadSheet()">Read Data</button>
+        </div>
+        <div class="form-group">
+          <a v-bind:href="downloadLink"><button class="btn btn-warning" v-if="downloadLink">Download CSV</button></a>
+        </div>
       </div>
       <div class="col-md-8">
         <pre>{{importData}}</pre>
@@ -38,7 +43,8 @@ export default {
       sheetID: '',
       sheetName: '',
       errmsg: '',
-      importData: []
+      importData: [],
+      downloadLink: null
     }
   },
   methods: {
@@ -86,18 +92,8 @@ export default {
         spreadsheetId: this.sheetID,
         range: this.sheetName + '!A:Z'
       }).then(response => {
-        this.importData = response.result
-        csv.convert2CSV(this.importData)
-        // if (range.values.length > 0) {
-        //   // console.log('Name, Major:')
-        //   for (var i = 0; i < range.values.length; i++) {
-        //     var row = range.values[i]
-        //     // Print columns A and E, which correspond to indices 0 and 4.
-        //     console.log(row[0] + ', ' + row[1])
-        //   }
-        // } else {
-        //   console.log('No data found.')
-        // }
+        this.importData = response.result.values
+        this.downloadLink = csv.convert2CSV(this.importData)
       }, response => {
         this.errmsg = 'Error: ' + response.result.error.message
       })
