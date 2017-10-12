@@ -178,7 +178,7 @@ export default {
             // After getting term_index, we can decide rep_party
             // Use rep history to get rep party
             var desiredRep = this.reps.find(rep => {
-              return rep.name === tuple[1]
+              return util.compareRepName(rep.name, tuple[1])
             })
             sanitized.rep_id = desiredRep.id
             sanitized.rep_party_id = desiredRep.history.find(history => {

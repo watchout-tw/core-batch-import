@@ -35,3 +35,11 @@ export function parseJointCommittees (jcs) {
 export function isLoggedIn () {
   return localStorage.getItem('watchout-token')
 }
+
+export function compareRepName (a, b) {
+  if (a.length <= 3 && b.length <= 3) return a === b
+  else {
+    return a.trim().replace(/[&/\\#,+()$~%.'":*?<>{}]/g, '') ===
+      b.trim().replace(/[&/\\#,+()$~%.'":*?<>{}]/g, '')
+  }
+}
