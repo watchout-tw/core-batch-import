@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 Vue.config.productionTip = false
 
 import axios from 'axios'
-axios.defaults.baseURL = 'https://sheets.googleapis.com/v4/spreadsheets/'
+axios.defaults.baseURL = 'https://c0re.watchout.tw'
 
 /* eslint-disable no-new */
 new Vue({
