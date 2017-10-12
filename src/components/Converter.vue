@@ -31,11 +31,11 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="sheetID">Sheet ID</label>
-          <input type="text" name="sheetID" class="form-control" placeholder="Enter Sheet ID" v-model="sheetID">
+          <input type="text" name="sheetID" class="form-control" placeholder="1IzXuWgFsqu5AuNYreYVsElZ0T_PKj_4D2y0b0C7AAmA" v-model="sheetID">
         </div>
         <div class="form-group">
           <label for="sheetName">Sheet Name</label>
-          <input type="text" name="sheetName" class="form-control" placeholder="Enter Sheet Name" v-model="sheetName">
+          <input type="text" name="sheetName" class="form-control" placeholder="罷免（第九屆第一會期）" v-model="sheetName">
         </div>
         <div class="form-group">
           <button class="btn btn-info" v-if="loggedIn && importData.length === 0" @click="readSpreadSheet()">讀取試算表</button>
@@ -73,8 +73,8 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       showAuth: false,
       loggedIn: false,
-      sheetID: '1IzXuWgFsqu5AuNYreYVsElZ0T_PKj_4D2y0b0C7AAmA',
-      sheetName: '罷免（第九屆第一會期）',
+      sheetID: '',
+      sheetName: '',
       errmsg: '',
       importData: [],
       exportData: [],
