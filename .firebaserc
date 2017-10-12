@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "inner-use": "core-batch-import",
+    "default": "core-batch-import"
+  }
+}
