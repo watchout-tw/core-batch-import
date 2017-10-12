@@ -18,6 +18,7 @@
           </div>
         </div>
         <div class="form-group">
+          <button class="btn btn-default" v-if="!showAuth && !loggedIn" @click="googleInit()">啟用 Google 登入</button>
           <button class="btn btn-default" v-if="showAuth" @click="handleAuthClick()">Google 登入</button>
         </div>
       </div>
@@ -92,6 +93,9 @@ export default {
     gapi.load('client:auth2', this.initClient)
   },
   methods: {
+    googleInit () {
+      gapi.load('client:auth2', this.initClient)
+    },
     watchoutLogin () {
       if (this.handle && this.password) {
         api.login({
