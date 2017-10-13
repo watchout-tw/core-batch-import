@@ -1,3 +1,5 @@
+const trimRegex = /[\s\u00B7\u0020\uFF65]/g
+
 export function parseDate (date) {
   if (!date) throw new Error()
   var parsedDate
@@ -37,9 +39,8 @@ export function isLoggedIn () {
 }
 
 export function compareRepName (a, b) {
-  if (a.length <= 3 && b.length <= 3) return a === b
+  if (a.length <= 3 || b.length <= 3) return a === b
   else {
-    return a.trim().replace(/[&/\\#,+()$~%.'":*?<>{}]/g, '') ===
-      b.trim().replace(/[&/\\#,+()$~%.'":*?<>{}]/g, '')
+    return a.replace(trimRegex, '') === b.replace(trimRegex, '')
   }
 }
