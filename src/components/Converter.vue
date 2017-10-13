@@ -51,8 +51,9 @@
       <div class="col-md-7">
         <pre v-if="importData.length > 0">讀取完成！</pre>
         <pre v-if="exportData.length > 0">資料處理完成！</pre>
-        <pre>{{exportData}}</pre>
-        {{errmsg}}
+        <pre v-if="uploaded">上傳成功！</pre>
+        <pre v-if="errorData.length > 0">處理失敗的資料：</br>{{errorData}}</pre>
+        <pre v-if="errmsg">其它錯誤訊息：</br>{{errmsg}}</pre>
       </div>
       <div class="col-md-1"></div>
     </div>
@@ -73,8 +74,8 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       showAuth: false,
       loggedIn: false,
-      sheetID: '',
-      sheetName: '',
+      sheetID: '1IzXuWgFsqu5AuNYreYVsElZ0T_PKj_4D2y0b0C7AAmA',
+      sheetName: '核四（第八屆）',
       errmsg: '',
       importData: [],
       exportData: [],
@@ -86,7 +87,8 @@ export default {
       termSessions: [],
       reps: [],
       st_questions: [],
-      isLoggedIn: util.isLoggedIn()
+      isLoggedIn: util.isLoggedIn(),
+      uploaded: false
     }
   },
   beforeMount () {
@@ -216,9 +218,10 @@ export default {
         sheetPromises.push(api.postRSStatement(tuple))
       })
       Promise.all(sheetPromises).then(response => {
+        this.uploaded = true
         console.log(response)
       }).catch(error => {
-        console.error('Post Data Error: ', error)
+        this.errmsg.concat('Post Data Error: ', error)
       })
     }
   }
