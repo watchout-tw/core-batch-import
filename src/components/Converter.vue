@@ -52,8 +52,8 @@
         <pre v-if="importData.length > 0">讀取完成！</pre>
         <pre v-if="exportData.length > 0">資料處理完成！</pre>
         <pre v-if="uploaded">上傳成功！</pre>
-        <pre v-if="errorData.length > 0">處理失敗的資料：</br>{{errorData}}</pre>
         <pre v-if="errmsg">其它錯誤訊息：</br>{{errmsg}}</pre>
+        <pre v-if="errorData.length > 0">處理失敗的資料：</br>{{errorData}}</pre>
       </div>
       <div class="col-md-1"></div>
     </div>
@@ -74,8 +74,8 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       showAuth: false,
       loggedIn: false,
-      sheetID: '1IzXuWgFsqu5AuNYreYVsElZ0T_PKj_4D2y0b0C7AAmA',
-      sheetName: '核四（第八屆）',
+      sheetID: '',
+      sheetName: '',
       errmsg: '',
       importData: [],
       exportData: [],
@@ -192,6 +192,7 @@ export default {
             }).party.id
             sanitized.content = tuple[4]
             sanitized.position_summary = tuple[5]
+            if (typeof tuple[6] !== 'number') throw new Error('st question id should be number')
             sanitized.st_question_id = tuple[6]
             sanitized.position = util.mapPosition(tuple[7])
             sanitized.source_link = tuple[8]
@@ -219,9 +220,8 @@ export default {
       })
       Promise.all(sheetPromises).then(response => {
         this.uploaded = true
-        console.log(response)
       }).catch(error => {
-        this.errmsg.concat('Post Data Error: ', error)
+        this.errmsg += 'Post Data Error: ' + error
       })
     }
   }
