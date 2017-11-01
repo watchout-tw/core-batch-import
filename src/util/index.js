@@ -40,7 +40,12 @@ export function isLoggedIn () {
 
 export function compareRepName (a, b) {
   if (a.length <= 3 || b.length <= 3) return a === b
-  else {
-    return a.replace(trimRegex, '') === b.replace(trimRegex, '')
-  }
+  else return a.replace(trimRegex, '') === b.replace(trimRegex, '')
+}
+
+export function parseSTQuestionID (stqID) {
+  if (!stqID) throw new Error()
+  var parsedID = parseInt(stqID, 10)
+  if (isNaN(parsedID)) throw new Error('st question id should be number')
+  else return parsedID
 }

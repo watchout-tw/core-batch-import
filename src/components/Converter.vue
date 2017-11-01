@@ -192,8 +192,7 @@ export default {
             }).party.id
             sanitized.content = tuple[4]
             sanitized.position_summary = tuple[5]
-            if (typeof tuple[6] !== 'number') throw new Error('st question id should be number')
-            sanitized.st_question_id = tuple[6]
+            sanitized.st_question_id = util.parseSTQuestionID(tuple[6])
             sanitized.position = util.mapPosition(tuple[7])
             sanitized.source_link = tuple[8]
             sanitized.principle_committee = tuple[9]
